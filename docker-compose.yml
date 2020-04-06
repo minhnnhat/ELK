@@ -285,12 +285,13 @@ services:
   #   networks:
   #       - elastic
   nginx:
-    image: nginx:latest
+    image: nginx:1.14
     ports:
-        - 8081:80
+        - 8881:8881
+        - 8882:8882
     volumes:
-        - ${PWD}/nginx-config/:/etc/nginx/conf.d/
-    command: /bin/bash -c "nginx -g 'daemon off;'"
+        - ${PWD}/nginx-config/nginx.conf:/etc/nginx/nginx.conf
+    #command: /bin/bash -c "nginx -g 'daemon off;'"
     ulimits:
       nproc: 65535
     networks:
