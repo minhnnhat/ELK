@@ -1,0 +1,36 @@
+https://www.fluentd.org/
+https://elk-docker.readthedocs.io/
+#Check config
+sudo packetbeat -e -c /etc/packetbeat/packetbeat.yml
+#Squid's log format 
+time elapsed remotehost code/status bytes method URL rfc931 peerstatus/peerhost type
+
+1265939281.764      1 172.16.167.228 TCP_DENIED/403 734 POST http://lbcore1.metacafe.com/test/SystemInfoManager.php - NONE/- text/html
+
+ 
+
+Understand squid access.log:
+
+ 
+
+Columns
+
+1.        1265939281.764  ==>   Time in Unix timestamp format, if convert its look like Fri, 12 Feb 2010 01:48:01 GMT
+
+2.                     1  ==>   Duration the elapsed time received, request and response from squid
+
+3.        172.16.167.228  ==>   Client IP Address
+
+4.        TCP_DENIED/403  ==>   Result Codes Squid result code and HTTP status code separated by slash
+
+5.                    734  ==>   Size in bytes the size/amount of data delivered to client
+
+6.                  POST  ==>   Request Method request method made by client
+
+7.  http://lbcore1.metacafe.com/test/SystemInfoManager.php  ==>  URL URL address requested by client
+
+8.                    -  ==>   rfc931 ident lookups for the requesting client, default value for ident lookups is turn off because performance issue so usually you get the " - "
+
+9.                NONE/-  ==>   Hierarchy Code
+
+10.           text/html  ==>    Type content type of the object seen in the HTTP reply header
