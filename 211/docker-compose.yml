@@ -34,8 +34,6 @@ services:
       # - type: volume
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
-    networks:
-      - hostnet
     ports:
       - 9201:9200
       - 9301:9300
@@ -68,8 +66,6 @@ services:
     volumes:
       - es211-02-data:/usr/share/elasticsearch/data
       - logs:/var/log
-    networks:
-      - hostnet
     ports:
       - 9202:9200
       - 9302:9300
@@ -92,8 +88,5 @@ volumes:
        o: bind
        type: none
        device: /logs/all-log
-networks:
-  hostnet:
-    external: true
-    name: host
+
 
