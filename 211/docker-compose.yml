@@ -6,7 +6,7 @@ services:
     environment:
       - node.name=es211-01
       - cluster.name=es_v7
-      - node.master=true
+      - node.master=false
       - node.data=true
       - node.attr.zone=zone211
       - cluster.routing.allocation.awareness.attributes=zone
