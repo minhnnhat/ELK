@@ -11,7 +11,7 @@ services:
       - node.attr.zone=zone211
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.seed_hosts=es211-01,es211-02,es212-ms,es212-02,es212-cli
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
@@ -35,7 +35,7 @@ services:
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
     networks:
-      - test-net
+      - elk_test-net
     ports:
       - 9201:9200
       - 9301:9300
@@ -51,7 +51,7 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.seed_hosts=es211-01,es211-02,es212-ms,es212-02,es212-cli
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
@@ -69,7 +69,7 @@ services:
       - es211-02-data:/usr/share/elasticsearch/data
       - logs:/var/log
     networks:
-      - test-net
+      - elk_test-net
     ports:
       - 9202:9200
       - 9302:9300
@@ -92,5 +92,8 @@ volumes:
        o: bind
        type: none
        device: /logs/all-log
+networks:
+  elk_test-net:
+    external: true
 
 
