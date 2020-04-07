@@ -92,4 +92,8 @@ volumes:
        o: bind
        type: none
        device: /logs/all-log
+networks:
+  hostnet:
+    external: true
+    name: host
 
