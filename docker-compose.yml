@@ -145,8 +145,8 @@ services:
   nginx:
     image: nginx:1.14
     ports:
-        - 8881:8881
-        - 8882:8882
+        - 80:80
+        - 81:81
     volumes:
         - ${PWD}/nginx-config/nginx.conf:/etc/nginx/nginx.conf
     #command: /bin/bash -c "nginx -g 'daemon off;'"
@@ -154,11 +154,6 @@ services:
       nproc: 65535
     networks:
       - ingress
-volumes:
-  esdata1:
-  esdata2:
-  logs:
-
 networks:
   elastic:
   ingress:
