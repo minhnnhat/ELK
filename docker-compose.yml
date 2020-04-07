@@ -2,11 +2,22 @@ version: '3.7'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: elasticsearch1
+    container_name: es212-01
     environment:
-      - node.name=elasticsearch1
-      - cluster.name=docker-cluster
-      - cluster.initial_master_nodes=elasticsearch1
+      - node.name=es212-ms
+      - cluster.name=es_v7
+      - node.master=true
+      - node.data=true
+      - node.attr.zone=zone212
+      - cluster.routing.allocation.awareness.attributes=zone
+      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+      - path.data=/logs/es212-ms/data
+      - path.logs=/logs/es212-ms/log
+      - network.host=0.0.0.0
+      - http.port=9201
+      - transport.tcp.port=9301
+      - discovery.seed_hosts=127.0.0.1:9300,127.0.0.1:9302,118.69.166.188:9301,118.69.166.188:9302
+      - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -19,149 +30,108 @@ services:
         hard: -1
     cap_add:
       - ALL
-    # privileged: true
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        delay: 10s
-      resources:
-        limits:
-          cpus: '1'
-          memory: 256M
-        reservations:
-          cpus: '1'
-          memory: 1G
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 10s
     volumes:
-      - type: volume
-        source: logs
-        target: /var/log
-      - type: volume
-        source: esdata1
-        target: /usr/share/elasticsearch/data
+      - /logs/es212-ms/data:/usr/share/elasticsearch/data
+      - /logs/es212-ms/log:/var/log
+      # - type: volume
+      #   source: /logs/es212-ms/log
+      #   target: /var/log
+      # - type: volume
+      #   source: esdata1
+      #   target: /usr/share/elasticsearch/data
+    networks:
+      - elastic
+      - ingress
+    ports:
+      - 9201:9201
+      - 9301:9301
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es212-02
+    environment:
+      - node.name=es212-02
+      - cluster.name=es_v7
+      - node.master=false
+      - node.data=true
+      - node.attr.zone=zone212
+      - cluster.routing.allocation.awareness.attributes=zone
+      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+      - path.data=/logs/es212-02/data
+      - path.logs=/logs/es212-02/log
+      - network.host=0.0.0.0
+      - http.port=9202
+      - transport.tcp.port=9302
+      - discovery.seed_hosts=127.0.0.1:9300,127.0.0.1:9301,118.69.166.188:9301,118.69.166.188:9302
+      - cluster.initial_master_nodes=es212-ms
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    volumes:
+      - /logs/es212-02/data:/usr/share/elasticsearch/data
+      - /logs/es212-02/log:/var/log
+    networks:
+      - elastic
+      - ingress
+    ports:
+      - 9202:9202
+      - 9302:9302
+  elasticsearch3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es212-cli
+    environment:
+      - node.name=es212-cli
+      - cluster.name=es_v7
+      - node.master=false
+      - node.data=false
+      - node.attr.zone=zone212
+      - cluster.routing.allocation.awareness.attributes=zone
+      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+      - path.data=/logs/es212-cli/data
+      - path.logs=/logs/es212-cli/log
+      - network.host=0.0.0.0
+      - http.port=9200
+      - transport.tcp.port=9300
+      - discovery.seed_hosts=127.0.0.1:9301,127.0.0.1:9302,118.69.166.188:9301,118.69.166.188:9302
+      - cluster.initial_master_nodes=es212-ms
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    volumes:
+      - /logs/es212-cli/data:/usr/share/elasticsearch/data
+      - /logs/es212-cli/log:/var/log
     networks:
       - elastic
       - ingress
     ports:
       - 9200:9200
       - 9300:9300
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: elasticsearch2
-    environment:
-      - node.name=elasticsearch2
-      - cluster.name=docker-cluster
-      - cluster.initial_master_nodes=elasticsearch1
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch1"
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - network.host=_eth0_
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    # privileged: true
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        delay: 10s
-      resources:
-        limits:
-          cpus: '1'
-          memory: 256M
-        reservations:
-          cpus: '1'
-          memory: 256M
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 10s
-    volumes:
-      - type: volume
-        source: logs
-        target: /var/log
-      - type: volume
-        source: esdata2
-        target: /usr/share/elasticsearch/data
-    networks:
-      - elastic
-      - ingress
-    ports:
-      - 9201:9200
-  # elasticsearch3:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-  #   container_name: elasticsearch3
-  #   environment:
-  #     - node.name=elasticsearch3
-  #     - cluster.name=docker-cluster
-  #     - cluster.initial_master_nodes=elasticsearch1
-  #     - bootstrap.memory_lock=true
-  #     - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-  #     - "discovery.zen.ping.unicast.hosts=elasticsearch1"
-  #     - http.cors.enabled=true
-  #     - http.cors.allow-origin=*
-  #     - network.host=_eth0_
-  #   ulimits:
-  #     nproc: 65535
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #   cap_add:
-  #     - ALL
-  #   # privileged: true
-  #   deploy:
-  #     replicas: 1
-  #     update_config:
-  #       parallelism: 1
-  #       delay: 10s
-  #     resources:
-  #       limits:
-  #         cpus: '1'
-  #         memory: 256M
-  #       reservations:
-  #         cpus: '1'
-  #         memory: 256M
-  #     restart_policy:
-  #       condition: on-failure
-  #       delay: 5s
-  #       max_attempts: 3
-  #       window: 10s
-  #   volumes:
-  #     - type: volume
-  #       source: logs
-  #       target: /var/log
-  #     - type: volume
-  #       source: esdata3
-  #       target: /usr/share/elasticsearch/data
-  #   networks:
-  #     - elastic
-  #     - ingress
-  #   ports:
-  #     - 9202:9200
   kibana:
     image: docker.elastic.co/kibana/kibana:7.6.2
     container_name: kibana
     environment:
-      SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://elasticsearch1:9200/
+      ELASTICSEARCH_URL: http://es212-cli:9200/
     ports:
       - 5601:5601
     volumes:
-      - type: volume
-        source: logs
-        target: /var/log
+      - /logs/kibana/log:/var/log
     ulimits:
       nproc: 65535
       memlock:
@@ -169,121 +139,9 @@ services:
         hard: -1
     cap_add:
       - ALL
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        delay: 10s
-      resources:
-        limits:
-          cpus: '1'
-          memory: 256M
-        reservations:
-          cpus: '1'
-          memory: 256M
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 3
-        window: 120s
     networks:
       - elastic
       - ingress
-  # auditbeat:
-  #   image: docker.elastic.co/beats/auditbeat:7.6.2
-  #   command: auditbeat -e -strict.perms=false
-  #   user: root
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   cap_add: ['AUDIT_CONTROL', 'AUDIT_READ']
-  #   pid: "host"
-  #   volumes:
-  #   #   - ${PWD}/configs/auditbeat.docker.yml:/usr/share/auditbeat/auditbeat.yml
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   networks:
-  #     - elastic
-  # metricbeat:
-  #   image: docker.elastic.co/beats/metricbeat:7.6.2
-  #   # command: --strict.perms=false
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   cap_add:
-  #     - AUDIT_CONTROL
-  #     - AUDIT_READ
-  #   volumes:
-  #     # - ${PWD}/configs/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-  #     - /proc:/hostfs/proc:ro
-  #     - /:/hostfs:ro
-  #   networks:
-  #     - elastic
-
-  # heartbeat:
-  #   image: docker.elastic.co/beats/heartbeat:7.6.2
-  #   command: --strict.perms=false
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   # volumes:
-  #   #   - ${PWD}/configs/heartbeat.docker.yml:/usr/share/heartbeat/heartbeat.yml
-  #   networks:
-  #     - elastic
-
-  # packetbeat:
-  #   image: docker.elastic.co/beats/packetbeat:7.6.2
-  #   command: --strict.perms=false
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   cap_add:
-  #     - NET_RAW
-  #     - NET_ADMIN
-  #   # volumes:
-  #   #   - ${PWD}/configs/packetbeat.docker.yml:/usr/share/packetbeat/packetbeat.yml
-  #   networks:
-  #     - elastic
-
-  # filebeat:
-  #   image: docker.elastic.co/beats/filebeat:7.6.2
-  #   command: --strict.perms=false
-  #   environment:
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   ports:
-  #     - 9000:9000
-  #   volumes:
-  #     # - ${PWD}/configs/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml
-  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   networks:
-  #     - elastic
-  # apmserver:
-  #   image: docker.elastic.co/apm/apm-server:7.6.2
-  #   command: --strict.perms=false
-  #   ports:
-  #     - 8200:8200
-  #     - 8201:8200
-  #   environment:
-  #     - apm-server.host=0.0.0.0
-  #     - setup.kibana.host=kibana:5601
-  #     - output.elasticsearch.hosts=["elasticsearch:9200"]
-  #   # volumes:
-  #   #   - ${PWD}/configs/apm-server.yml:/usr/share/apm-server/apm-server.yml
-  #   networks:
-  #       - elastic
-  # app-search:
-  #   image: docker.elastic.co/app-search/app-search:7.6.2
-  #   ports:
-  #     - 3002:3002
-  #   environment:
-  #     secret_session_key: supersecretsessionkey
-  #     elasticsearch.host: http://elasticsearch1:9200/
-  #     allow_es_settings_modification: "true"
-  #   networks:
-  #       - elastic
   nginx:
     image: nginx:1.14
     ports:
@@ -305,14 +163,4 @@ networks:
   elastic:
   ingress:
 
-# configs:
-#   auditbeat_config:
-#     file: configs/auditbeat.docker.yml
-#   filebeat_config:
-#     file: configs/filebeat.docker.yml
-#   heartbeat_config:
-#     file: configs/heartbeat.docker.yml
-#   metricbeat_config:
-#     file: configs/metricbeat.docker.yml
-#   packetbeat_config:
-#     file: configs/packetbeat.docker.yml
+
