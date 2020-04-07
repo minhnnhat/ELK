@@ -94,12 +94,13 @@ services:
       - network.host=0.0.0.0
       - http.port=9200
       - transport.tcp.port=9300
-      - discovery.seed_hosts=127.0.0.1:9301,127.0.0.1:9302,118.69.166.188:9301,118.69.166.188:9302
+      - discovery.seed_hosts=127.0.0.1:9301,127.0.0.1:9302
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
+      - http.cors.allow-methods="HEAD, GET, POST, PUT"
       - network.host=_eth0_
     ulimits:
       nproc: 65535
