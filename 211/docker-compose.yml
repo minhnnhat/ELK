@@ -1,0 +1,101 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es211-01
+    environment:
+      - node.name=es211-01
+      - cluster.name=es_v7
+      - node.master=true
+      - node.data=true
+      - node.attr.zone=zone211
+      - cluster.routing.allocation.awareness.attributes=zone
+      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+      - network.host=0.0.0.0
+      - http.port=9201
+      - transport.tcp.port=9301
+      - discovery.seed_hosts=127.0.0.1:9302,118.69.166.188:9300,118.69.166.188:9301,118.69.166.188:9302
+      - cluster.initial_master_nodes=es212-ms
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    volumes:
+      - es211-01-data:/usr/share/elasticsearch/data
+      - logs:/var/log
+      # - type: volume
+      #   source: /logs/es212-ms/log
+      #   target: /var/log
+      # - type: volume
+      #   source: esdata1
+      #   target: /usr/share/elasticsearch/data
+    networks:
+      - elastic
+    ports:
+      - 9201:9201
+      - 9301:9301
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es211-02
+    environment:
+      - node.name=es211-02
+      - cluster.name=es_v7
+      - node.master=false
+      - node.data=true
+      - node.attr.zone=zone211
+      - cluster.routing.allocation.awareness.attributes=zone
+      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+      - network.host=0.0.0.0
+      - http.port=9202
+      - transport.tcp.port=9302
+      - discovery.seed_hosts=127.0.0.1:9301,118.69.166.188:9300,118.69.166.188:9301,118.69.166.188:9302
+      - cluster.initial_master_nodes=es212-ms
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=_eth0_
+    ulimits:
+      nproc: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - ALL
+    volumes:
+      - es211-02-data:/usr/share/elasticsearch/data
+      - logs:/var/log
+    networks:
+      - elastic
+    ports:
+      - 9202:9202
+      - 9302:9302
+volumes:
+  es211-01-data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: /logs/es211-01/data
+  es211-02-data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: /logs/es211-02/data
+  logs:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: /logs/all-log
+networks:
+  elastic:
