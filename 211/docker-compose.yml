@@ -35,7 +35,7 @@ services:
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
     networks:
-      hostnet: {}
+      - hostnet
     ports:
       - 9201:9200
       - 9301:9300
@@ -69,7 +69,7 @@ services:
       - es211-02-data:/usr/share/elasticsearch/data
       - logs:/var/log
     networks:
-      hostnet: {}
+      - hostnet
     ports:
       - 9202:9200
       - 9302:9300
