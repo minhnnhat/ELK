@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  elasticsearch:
+  es211-01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es211-01
     environment:
@@ -11,8 +11,7 @@ services:
       - node.attr.zone=zone211
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - network.host=0.0.0.0
-      - discovery.seed_hosts=127.0.0.1:9302,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
       # - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
@@ -41,7 +40,7 @@ services:
     ports:
       - 9201:9200
       - 9301:9300
-  elasticsearch2:
+  es211-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es211-02
     environment:
@@ -53,7 +52,7 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=127.0.0.1:9301,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
       # - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true

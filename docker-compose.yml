@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  elasticsearch:
+  es212-ms:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es212-ms
     environment:
@@ -12,7 +12,7 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=127.0.0.1:9300,127.0.0.1:9302,118.69.166.188:9301,118.69.166.188:9302
+      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,118.69.166.188:9301,118.69.166.188:9302
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
@@ -42,7 +42,7 @@ services:
     ports:
       - 9201:9200
       - 9301:9300
-  elasticsearch2:
+  es212-02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es212-02
     environment:
@@ -54,7 +54,7 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=127.0.0.1:9300,127.0.0.1:9301,118.69.166.188:9301,118.69.166.188:9302
+      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,118.69.166.188:9301,118.69.166.188:9302
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
@@ -78,7 +78,7 @@ services:
     ports:
       - 9202:9200
       - 9302:9300
-  elasticsearch3:
+  es212-cli:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es212-cli
     environment:
@@ -90,7 +90,7 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=127.0.0.1:9301,127.0.0.1:9302,118.69.166.188:9301,118.69.166.188:9302
+      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,118.69.166.188:9301,118.69.166.188:9302
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
