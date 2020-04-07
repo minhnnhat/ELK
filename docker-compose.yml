@@ -2,7 +2,7 @@ version: '3.7'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: es212-01
+    container_name: es212-ms
     environment:
       - node.name=es212-ms
       - cluster.name=es_v7
@@ -11,8 +11,6 @@ services:
       - node.attr.zone=zone212
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - path.data=/logs/es212-ms/data
-      - path.logs=/logs/es212-ms/log
       - network.host=0.0.0.0
       - http.port=9201
       - transport.tcp.port=9301
@@ -31,8 +29,8 @@ services:
     cap_add:
       - ALL
     volumes:
-      - /logs/es212-ms/data:/usr/share/elasticsearch/data
-      - /logs/es212-ms/log:/var/log
+      - es212-ms-data:/usr/share/elasticsearch/data
+      - logs:/var/log
       # - type: volume
       #   source: /logs/es212-ms/log
       #   target: /var/log
@@ -56,8 +54,6 @@ services:
       - node.attr.zone=zone212
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - path.data=/logs/es212-02/data
-      - path.logs=/logs/es212-02/log
       - network.host=0.0.0.0
       - http.port=9202
       - transport.tcp.port=9302
@@ -76,8 +72,8 @@ services:
     cap_add:
       - ALL
     volumes:
-      - /logs/es212-02/data:/usr/share/elasticsearch/data
-      - /logs/es212-02/log:/var/log
+      - es212-02-data:/usr/share/elasticsearch/data
+      - logs:/var/log
     networks:
       - elastic
       - ingress
@@ -95,8 +91,6 @@ services:
       - node.attr.zone=zone212
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - path.data=/logs/es212-cli/data
-      - path.logs=/logs/es212-cli/log
       - network.host=0.0.0.0
       - http.port=9200
       - transport.tcp.port=9300
@@ -115,8 +109,8 @@ services:
     cap_add:
       - ALL
     volumes:
-      - /logs/es212-cli/data:/usr/share/elasticsearch/data
-      - /logs/es212-cli/log:/var/log
+      - es212-cli-data:/usr/share/elasticsearch/data
+      - logs:/var/log
     networks:
       - elastic
       - ingress
@@ -131,7 +125,7 @@ services:
     ports:
       - 5601:5601
     volumes:
-      - /logs/kibana/log:/var/log
+      - logs:/var/log
     ulimits:
       nproc: 65535
       memlock:
@@ -154,6 +148,31 @@ services:
       nproc: 65535
     networks:
       - ingress
+volumes:
+  es212-ms-data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: path.data=/logs/es212-ms/data
+  es212-02-data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: path.data=/logs/es212-02/data
+  es212-cli-data:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: path.data=/logs/es212-cli/data
+  logs:
+    driver: local
+    driver_opts:
+       o: bind
+       type: none
+       device: path.data=/logs/all-log
 networks:
   elastic:
   ingress:
