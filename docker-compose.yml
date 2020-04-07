@@ -36,9 +36,9 @@ services:
       # - type: volume
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
-    networks:
-      - elastic
-      - ingress
+    # networks:
+    #   - elastic
+    #   - ingress
     ports:
       - 9201:9200
       - 9301:9300
@@ -72,9 +72,9 @@ services:
     volumes:
       - es212-02-data:/usr/share/elasticsearch/data
       - logs:/var/log
-    networks:
-      - elastic
-      - ingress
+    # networks:
+    #   - elastic
+    #   - ingress
     ports:
       - 9202:9200
       - 9302:9300
@@ -109,9 +109,9 @@ services:
     volumes:
       - es212-cli-data:/usr/share/elasticsearch/data
       - logs:/var/log
-    networks:
-      - elastic
-      - ingress
+    # networks:
+    #   - elastic
+    #   - ingress
     ports:
       - 9200:9200
       - 9300:9300
@@ -131,9 +131,9 @@ services:
         hard: -1
     cap_add:
       - ALL
-    networks:
-      - elastic
-      - ingress
+    # networks:
+    #   - elastic
+    #   - ingress
   nginx:
     image: nginx:1.14
     ports:
@@ -144,8 +144,8 @@ services:
     #command: /bin/bash -c "nginx -g 'daemon off;'"
     ulimits:
       nproc: 65535
-    networks:
-      - ingress
+    # networks:
+    #   - ingress
 volumes:
   es212-ms-data:
     driver: local
@@ -171,10 +171,10 @@ volumes:
        o: bind
        type: none
        device: /logs/all-log
-networks:
-  elastic:
-    driver: bridge
-  ingress:
-    driver: bridge
+# networks:
+#   elastic:
+#     driver: bridge
+#   ingress:
+#     driver: bridge
 
 
