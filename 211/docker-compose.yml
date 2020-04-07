@@ -13,7 +13,7 @@ services:
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
-      - cluster.initial_master_nodes=118.69.166.178
+      - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -34,6 +34,8 @@ services:
       # - type: volume
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
+    networks:
+      - test-net
     ports:
       - 9201:9200
       - 9301:9300
@@ -51,7 +53,7 @@ services:
       - network.host=0.0.0.0
       - discovery.seed_hosts=es211-01,es211-02,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
-      - cluster.initial_master_nodes=118.69.166.178
+      - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -66,6 +68,8 @@ services:
     volumes:
       - es211-02-data:/usr/share/elasticsearch/data
       - logs:/var/log
+    networks:
+      - test-net
     ports:
       - 9202:9200
       - 9302:9300
