@@ -179,6 +179,8 @@ volumes:
        device: /logs/all-log
 networks:
   elastic:
+    driver: bridge
   ingress:
+    driver: bridge
 
 
