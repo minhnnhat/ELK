@@ -14,8 +14,9 @@ services:
       - network.host=0.0.0.0
       - http.port=9201
       - transport.tcp.port=9301
-      - discovery.seed_hosts=127.0.0.1:9302,118.69.166.188:9300,118.69.166.188:9301,118.69.166.188:9302
-      - cluster.initial_master_nodes=es212-ms
+      - discovery.seed_hosts=127.0.0.1:9302,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.zen.minimum_master_nodes=1
+      # - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
@@ -56,8 +57,9 @@ services:
       - network.host=0.0.0.0
       - http.port=9202
       - transport.tcp.port=9302
-      - discovery.seed_hosts=127.0.0.1:9301,118.69.166.188:9300,118.69.166.188:9301,118.69.166.188:9302
-      - cluster.initial_master_nodes=es212-ms
+      - discovery.seed_hosts=127.0.0.1:9301,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
+      - discovery.zen.minimum_master_nodes=1
+      # - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
