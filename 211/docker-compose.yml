@@ -12,8 +12,6 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - http.port=9201
-      - transport.tcp.port=9301
       - discovery.seed_hosts=127.0.0.1:9302,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
       # - cluster.initial_master_nodes=es212-ms
@@ -41,8 +39,8 @@ services:
     networks:
       - elastic
     ports:
-      - 9201:9201
-      - 9301:9301
+      - 9201:9200
+      - 9301:9300
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es211-02
@@ -55,8 +53,6 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - http.port=9202
-      - transport.tcp.port=9302
       - discovery.seed_hosts=127.0.0.1:9301,118.69.166.178:9300,118.69.166.178:9301,118.69.166.178:9302
       - discovery.zen.minimum_master_nodes=1
       # - cluster.initial_master_nodes=es212-ms
@@ -78,8 +74,8 @@ services:
     networks:
       - elastic
     ports:
-      - 9202:9202
-      - 9302:9302
+      - 9202:9200
+      - 9302:9300
 volumes:
   es211-01-data:
     driver: local
