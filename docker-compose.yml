@@ -154,25 +154,25 @@ volumes:
     driver_opts:
        o: bind
        type: none
-       device: path.data=/logs/es212-ms/data
+       device: /logs/es212-ms/data
   es212-02-data:
     driver: local
     driver_opts:
        o: bind
        type: none
-       device: path.data=/logs/es212-02/data
+       device: /logs/es212-02/data
   es212-cli-data:
     driver: local
     driver_opts:
        o: bind
        type: none
-       device: path.data=/logs/es212-cli/data
+       device: /logs/es212-cli/data
   logs:
     driver: local
     driver_opts:
        o: bind
        type: none
-       device: path.data=/logs/all-log
+       device: /logs/all-log
 networks:
   elastic:
   ingress:
