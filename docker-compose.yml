@@ -115,7 +115,7 @@ services:
     container_name: kibana
     environment:
       SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://es212-02:9200/
+      ELASTICSEARCH_HOSTS: http://es212-ms:9200
     ports:
       - 5601:5601
     volumes:
