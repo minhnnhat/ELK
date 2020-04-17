@@ -185,6 +185,4 @@ networks:
   test-net:
     driver: overlay
     attachable: true
-  public:
-
 
