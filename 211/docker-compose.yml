@@ -73,6 +73,24 @@ services:
     ports:
       - 9202:9200
       - 9302:9300
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.6.2
+    volumes:
+      - type: bind
+        source: /root/ELK/211/config/pipelines.yml
+        target: /usr/share/logstash/config/pipelines.yml
+        read_only: true
+      - type: bind
+        source: /root/ELK/211/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "8080:8080/tcp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx1g -Xms1G"
+    networks:
+      - elk_test-net
 volumes:
   es211-01-data:
     driver: local
