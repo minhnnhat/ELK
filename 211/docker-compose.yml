@@ -18,6 +18,11 @@ services:
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.watcher.enabled=false
+      - xpack.graph.enabled= false
+      - xpack.ml.enabled=false
     ulimits:
       nproc: 65535
       memlock:
@@ -58,6 +63,11 @@ services:
       - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.watcher.enabled=false
+      - xpack.graph.enabled= false
+      - xpack.ml.enabled=false
     ulimits:
       nproc: 65535
       memlock:
