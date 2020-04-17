@@ -21,7 +21,7 @@ services:
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=false
       - xpack.watcher.enabled=false
-      - xpack.graph.enabled= false
+      - xpack.graph.enabled=false
       - xpack.ml.enabled=false
     ulimits:
       nproc: 65535
@@ -66,7 +66,7 @@ services:
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=false
       - xpack.watcher.enabled=false
-      - xpack.graph.enabled= false
+      - xpack.graph.enabled=false
       - xpack.ml.enabled=false
     ulimits:
       nproc: 65535
