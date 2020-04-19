@@ -1,10 +1,13 @@
-FROM python:3.6-alpine
+FROM alpine:3.8
 
-RUN pip3 install  elasticsearch-curator &&\
-    rm -rf /var/cache/apk/*
+ENV CURATOR_VERSION=5.8.1
 
-COPY ./config/ /config
+RUN apk --update add --no-cache tini python py-pip \
+  && pip install elasticsearch-curator==${CURATOR_VERSION}
 
-RUN /usr/bin/crontab /config/crontab.txt
+COPY entrypoint.sh /
 
-CMD ["/usr/sbin/crond","-f"]
+WORKDIR /usr/share/curator
+COPY config ./config
+
+ENTRYPOINT ["/entrypoint.sh"]

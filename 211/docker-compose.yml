@@ -101,6 +101,16 @@ services:
       LS_JAVA_OPTS: "-Xmx1g -Xms1G"
     networks:
       - elk_test-net
+  curator:
+    image: elk-curator
+    environment:
+      ELASTICSEARCH_HOST: es212-ms
+      CRON: 0 0 * * *
+      CONFIG_FILE: /usr/share/curator/config/config_file.yml
+      ACTION_FILE: /usr/share/curator/config/action_file.yml
+      UNIT_COUNT: 2
+    networks:
+      - elk_test-net
 volumes:
   es211-01-data:
     driver: local
