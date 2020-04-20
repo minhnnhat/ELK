@@ -23,6 +23,7 @@ services:
       - xpack.watcher.enabled=false
       - xpack.graph.enabled=false
       - xpack.ml.enabled=false
+      - TZ=Asia/Ho_Chi_Minh
     ulimits:
       nproc: 65535
       memlock:
@@ -68,6 +69,7 @@ services:
       - xpack.watcher.enabled=false
       - xpack.graph.enabled=false
       - xpack.ml.enabled=false
+      - TZ=Asia/Ho_Chi_Minh
     ulimits:
       nproc: 65535
       memlock:
@@ -104,11 +106,11 @@ services:
   curator:
     image: elk-curator
     environment:
-      ELASTICSEARCH_HOST: es212-ms
-      CRON: 0 0 * * *
-      CONFIG_FILE: /usr/share/curator/config/config_file.yml
-      ACTION_FILE: /usr/share/curator/config/action_file.yml
-      UNIT_COUNT: 2
+      - ELASTICSEARCH_HOST=es212-ms
+      - CRON=0 0 * * *
+      - CONFIG_FILE=/usr/share/curator/config/config_file.yml
+      - ACTION_FILE=/usr/share/curator/config/action_file.yml
+      - UNIT_COUNT=2
     networks:
       - elk_test-net
 volumes:
