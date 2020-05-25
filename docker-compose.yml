@@ -12,11 +12,11 @@ services:
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
       - network.host=0.0.0.0
-      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,es211-01,es211-02
+      - discovery.seed_hosts=es212-ms,es211-01
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - xpack.security.enabled=false
@@ -24,6 +24,7 @@ services:
       - xpack.watcher.enabled=false
       - xpack.graph.enabled=false
       - xpack.ml.enabled=false
+      - TZ=Asia/Ho_Chi_Minh
     ulimits:
       nproc: 65535
       memlock:
@@ -41,96 +42,97 @@ services:
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
     networks:
-      - test-net
-    ports:
-      - 9201:9200
-      - 9301:9300
-  es212-02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: es212-02
-    environment:
-      - node.name=es212-02
-      - cluster.name=es_v7
-      - node.master=false
-      - node.data=true
-      - node.attr.zone=zone212
-      - cluster.routing.allocation.awareness.attributes=zone
-      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - network.host=0.0.0.0
-      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,es211-01,es211-02
-      - discovery.zen.minimum_master_nodes=1
-      - cluster.initial_master_nodes=es212-ms
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
-      - xpack.watcher.enabled=false
-      - xpack.graph.enabled=false
-      - xpack.ml.enabled=false
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    volumes:
-      - es212-02-data:/usr/share/elasticsearch/data
-      - logs:/var/log
-    networks:
-      - test-net
-    ports:
-      - 9202:9200
-      - 9302:9300
-  es212-cli:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: es212-cli
-    environment:
-      - node.name=es212-cli
-      - cluster.name=es_v7
-      - node.master=false
-      - node.data=false
-      - node.attr.zone=zone212
-      - cluster.routing.allocation.awareness.attributes=zone
-      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - network.host=0.0.0.0
-      - discovery.seed_hosts=es212-ms,es212-02,es212-cli,es211-01,es211-02
-      - discovery.zen.minimum_master_nodes=1
-      - cluster.initial_master_nodes=es212-ms
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - http.cors.allow-methods=HEAD,GET,POST,PUT
-      - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
-      - xpack.watcher.enabled=false
-      - xpack.graph.enabled=false
-      - xpack.ml.enabled=false
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    volumes:
-      - es212-cli-data:/usr/share/elasticsearch/data
-      - logs:/var/log
-    networks:
-      - test-net
-      - public
+      - elk-net
     ports:
       - 9200:9200
       - 9300:9300
+  # es212-02:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+  #   container_name: es212-02
+  #   environment:
+  #     - node.name=es212-02
+  #     - cluster.name=es_v7
+  #     - node.master=false
+  #     - node.data=true
+  #     - node.attr.zone=zone212
+  #     - cluster.routing.allocation.awareness.attributes=zone
+  #     - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+  #     - network.host=0.0.0.0
+  #     - discovery.seed_hosts=es212-ms,es212-02,es212-cli,es211-01,es211-02
+  #     - discovery.zen.minimum_master_nodes=1
+  #     - cluster.initial_master_nodes=es212-ms
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+  #     - http.cors.enabled=true
+  #     - http.cors.allow-origin=*
+  #     - xpack.security.enabled=false
+  #     - xpack.monitoring.enabled=false
+  #     - xpack.watcher.enabled=false
+  #     - xpack.graph.enabled=false
+  #     - xpack.ml.enabled=false
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   volumes:
+  #     - es212-02-data:/usr/share/elasticsearch/data
+  #     - logs:/var/log
+  #   networks:
+  #     - test-net
+  #   ports:
+  #     - 9202:9200
+  #     - 9302:9300
+  # es212-cli:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+  #   container_name: es212-cli
+  #   environment:
+  #     - node.name=es212-cli
+  #     - cluster.name=es_v7
+  #     - node.master=false
+  #     - node.data=false
+  #     - node.attr.zone=zone212
+  #     - cluster.routing.allocation.awareness.attributes=zone
+  #     - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+  #     - network.host=0.0.0.0
+  #     - discovery.seed_hosts=es212-ms,es212-02,es212-cli,es211-01,es211-02
+  #     - discovery.zen.minimum_master_nodes=1
+  #     - cluster.initial_master_nodes=es212-ms
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+  #     - http.cors.enabled=true
+  #     - http.cors.allow-origin=*
+  #     - http.cors.allow-methods=HEAD,GET,POST,PUT
+  #     - xpack.security.enabled=false
+  #     - xpack.monitoring.enabled=false
+  #     - xpack.watcher.enabled=false
+  #     - xpack.graph.enabled=false
+  #     - xpack.ml.enabled=false
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   volumes:
+  #     - es212-cli-data:/usr/share/elasticsearch/data
+  #     - logs:/var/log
+  #   networks:
+  #     - test-net
+  #     - public
+  #   ports:
+  #     - 9200:9200
+  #     - 9300:9300
   kibana:
     image: docker.elastic.co/kibana/kibana:7.6.2
     container_name: kibana
     environment:
       SERVER_NAME: localhost
       ELASTICSEARCH_HOSTS: http://es212-ms:9200
+      TZ: Asia/Ho_Chi_Minh
     ports:
       - 5601:5601
     volumes:
@@ -143,7 +145,7 @@ services:
     cap_add:
       - ALL
     networks:
-      - test-net
+      - elk-net
   # nginx:
   #   image: nginx:1.14
   #   ports:
@@ -163,18 +165,18 @@ volumes:
        o: bind
        type: none
        device: /logs/es212-ms/data
-  es212-02-data:
-    driver: local
-    driver_opts:
-       o: bind
-       type: none
-       device: /logs/es212-02/data
-  es212-cli-data:
-    driver: local
-    driver_opts:
-       o: bind
-       type: none
-       device: /logs/es212-cli/data
+  # es212-02-data:
+  #   driver: local
+  #   driver_opts:
+  #      o: bind
+  #      type: none
+  #      device: /logs/es212-02/data
+  # es212-cli-data:
+  #   driver: local
+  #   driver_opts:
+  #      o: bind
+  #      type: none
+  #      device: /logs/es212-cli/data
   logs:
     driver: local
     driver_opts:
@@ -182,7 +184,7 @@ volumes:
        type: none
        device: /logs/all-log
 networks:
-  test-net:
+  elk-net:
     driver: overlay
     attachable: true
 

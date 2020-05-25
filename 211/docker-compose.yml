@@ -11,11 +11,11 @@ services:
       - node.attr.zone=zone211
       - cluster.routing.allocation.awareness.attributes=zone
       - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - discovery.seed_hosts=es211-01,es211-02,es212-ms,es212-02,es212-cli
+      - discovery.seed_hosts=es211-01,es212-ms
       - discovery.zen.minimum_master_nodes=1
       - cluster.initial_master_nodes=es212-ms
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - "ES_JAVA_OPTS=-Xms1024M -Xmx1024M"
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - xpack.security.enabled=false
@@ -41,50 +41,50 @@ services:
       #   source: esdata1
       #   target: /usr/share/elasticsearch/data
     networks:
-      - elk_test-net
+      - elk_elk-net
     ports:
-      - 9201:9200
-      - 9301:9300
-  es211-02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    container_name: es211-02
-    environment:
-      - node.name=es211-02
-      - cluster.name=es_v7
-      - node.master=false
-      - node.data=true
-      - node.attr.zone=zone211
-      - cluster.routing.allocation.awareness.attributes=zone
-      - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
-      - network.host=0.0.0.0
-      - discovery.seed_hosts=es211-01,es211-02,es212-ms,es212-02,es212-cli
-      - discovery.zen.minimum_master_nodes=1
-      - cluster.initial_master_nodes=es212-ms
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
-      - xpack.watcher.enabled=false
-      - xpack.graph.enabled=false
-      - xpack.ml.enabled=false
-      - TZ=Asia/Ho_Chi_Minh
-    ulimits:
-      nproc: 65535
-      memlock:
-        soft: -1
-        hard: -1
-    cap_add:
-      - ALL
-    volumes:
-      - es211-02-data:/usr/share/elasticsearch/data
-      - logs:/var/log
-    networks:
-      - elk_test-net
-    ports:
-      - 9202:9200
-      - 9302:9300
+      - 9200:9200
+      - 9300:9300
+  # es211-02:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+  #   container_name: es211-02
+  #   environment:
+  #     - node.name=es211-02
+  #     - cluster.name=es_v7
+  #     - node.master=false
+  #     - node.data=true
+  #     - node.attr.zone=zone211
+  #     - cluster.routing.allocation.awareness.attributes=zone
+  #     - cluster.routing.allocation.awareness.force.zone.values=zone211,zone212
+  #     - network.host=0.0.0.0
+  #     - discovery.seed_hosts=es211-01,es211-02,es212-ms,es212-02,es212-cli
+  #     - discovery.zen.minimum_master_nodes=1
+  #     - cluster.initial_master_nodes=es212-ms
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+  #     - http.cors.enabled=true
+  #     - http.cors.allow-origin=*
+  #     - xpack.security.enabled=false
+  #     - xpack.monitoring.enabled=false
+  #     - xpack.watcher.enabled=false
+  #     - xpack.graph.enabled=false
+  #     - xpack.ml.enabled=false
+  #     - TZ=Asia/Ho_Chi_Minh
+  #   ulimits:
+  #     nproc: 65535
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   cap_add:
+  #     - ALL
+  #   volumes:
+  #     - es211-02-data:/usr/share/elasticsearch/data
+  #     - logs:/var/log
+  #   networks:
+  #     - elk_test-net
+  #   ports:
+  #     - 9202:9200
+  #     - 9302:9300
   logstash:
     image: docker.elastic.co/logstash/logstash:7.6.2
     volumes:
@@ -100,9 +100,10 @@ services:
       - "8080:8080/tcp"
       - "9600:9600"
     environment:
-      LS_JAVA_OPTS: "-Xmx1g -Xms1G"
+      LS_JAVA_OPTS: "-Xmx1024M -Xms1024M"
+      TZ: Asia/Ho_Chi_Minh
     networks:
-      - elk_test-net
+      - elk_elk-net
   curator:
     image: elk-curator
     environment:
@@ -112,7 +113,7 @@ services:
       - ACTION_FILE=/usr/share/curator/config/action_file.yml
       - UNIT_COUNT=2
     networks:
-      - elk_test-net
+      - elk_elk-net
 volumes:
   es211-01-data:
     driver: local
@@ -120,12 +121,12 @@ volumes:
        o: bind
        type: none
        device: /logs/es211-01/data
-  es211-02-data:
-    driver: local
-    driver_opts:
-       o: bind
-       type: none
-       device: /logs/es211-02/data
+  # es211-02-data:
+  #   driver: local
+  #   driver_opts:
+  #      o: bind
+  #      type: none
+  #      device: /logs/es211-02/data
   logs:
     driver: local
     driver_opts:
@@ -133,7 +134,7 @@ volumes:
        type: none
        device: /logs/all-log
 networks:
-  elk_test-net:
+  elk_elk-net:
     external: true
 
 
